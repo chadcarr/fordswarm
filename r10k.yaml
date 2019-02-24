@@ -1,0 +1,5 @@
+cachedir: '/var/cache/r10k'
+sources:
+  fordswarm:
+    remote: 'https://github.com/chadcarr/fordswarm-r10k'
+    basedir: '/etc/puppetlabs/code/environments'

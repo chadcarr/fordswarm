@@ -1,4 +1,6 @@
 #!/bin/sh
+# Shell provisioner for vagrant - just enough to get the system updated
+# and the puppet command installed so that vagrant can run puppet apply.
 
 PUPPET_PLATFORM="puppet6-release"
 
@@ -13,6 +15,7 @@ fi
 # This bootstraps a node that can run "puppet apply" to apply the
 # basic manifest (bootstrap-puppet.pp) which will continue the 
 # configuration of each node into a proper puppet server or agent.
+export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get -y upgrade
-apt-get -y install puppet-agent
+apt-get upgrade
+apt-get install puppet-agent

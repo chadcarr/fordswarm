@@ -1,3 +1,14 @@
+# Vagrant should be responsible merely for creating the machines and network,
+# then minimal provisioning to allow puppet to take over from source control.
+# This ensures that as much configuration management as possible is handled
+# by a real puppet server-agent arrangement, and doesn't get embedded in the
+# Vagrant development environment by mistake.
+# 1. define machines and network
+# 2. minimal shell provisioning (bootstrap.sh) hands off to minimal puppet
+#    apply to configure ntp, puppet, and r10k (bootstrap-puppet.pp)
+# 3. all other configuration is handled by puppet server-agent, r10k and the
+#    control repo in perpetuity
+
 net = "10.2.2"
 
 # Create a manager and <workercount> workers starting at IP <net>.<starthost>
@@ -18,7 +29,7 @@ Vagrant.configure("2") do |config|
         host.vm.provision "puppet" do |puppet|
             puppet.manifest_file = "bootstrap-puppet.pp"
             puppet.facter = {
-                "puppetserver" => "#{manager}"
+                "master" => "#{manager}"
             }
             #puppet.options = "--verbose --debug"
         end
@@ -37,7 +48,7 @@ Vagrant.configure("2") do |config|
             host.vm.provision "puppet" do |puppet|
                 puppet.manifest_file = "bootstrap-puppet.pp"
                 puppet.facter = {
-                    "puppetserver" => "#{manager}"
+                    "master" => "#{manager}"
                 }
                 #puppet.options = "--verbose --debug"
             end

@@ -1,17 +1,30 @@
+# Puppet provisioner for vagrant - just enough to get puppet running in a
+# server-agent arrangement so that r10k and the control repo can take over.
+
 class profile::puppet_server {
   package { 'puppetserver': ensure => present }
   service { 'puppetserver':
     ensure => running,
     enable => true
   }
-  # install r10k and Puppetfile
-  # copy site manifests
+  package { 'r10k':
+    ensure => present,
+    provider => 'puppet_gem'
+  }
+  file { '/etc/puppetlabs/r10k':
+    ensure => directory
+  }
+  file { '/etc/puppetlabs/r10k/r10k.yaml':
+    ensure => file,
+    source => '/vagrant/r10k.yaml'
+  }
+  exec { '/opt/puppetlabs/puppet/bin/r10k deploy environment -p': }
 }
 
 class profile::puppet_agent {
   host { 'puppet':
     ensure => present,
-    ip => $puppetserver,
+    ip => $master,
     target => '/etc/hosts'
   }
   service { 'puppet':
