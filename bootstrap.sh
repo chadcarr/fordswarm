@@ -1,21 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 # Shell provisioner for vagrant - just enough to get the system updated
-# and the puppet command installed so that vagrant can run puppet apply.
+# and habitat installed so that vagrant can run the chef solo provisioner.
 
-PUPPET_PLATFORM="puppet6-release"
+# Update the cache and system
+#zypper refresh
+#zypper --non-interactive update
 
-# Add puppet platform repo to apt sources if needed
-if ! dpkg-query -W -f '${Status}\n' $PUPPET_PLATFORM | grep "install ok installed"; then
-    wget https://apt.puppetlabs.com/${PUPPET_PLATFORM}-bionic.deb \
-        && dpkg -i ${PUPPET_PLATFORM}-bionic.deb \
-        && rm ${PUPPET_PLATFORM}-bionic.deb
-fi
+[[ -f /bin/hab ]] \
+    || curl https://raw.githubusercontent.com/habitat-sh/habitat/master/components/hab/install.sh | bash
 
-# Update the package cache and the system, then install puppet-agent.
-# This bootstraps a node that can run "puppet apply" to apply the
-# basic manifest (bootstrap-puppet.pp) which will continue the 
-# configuration of each node into a proper puppet server or agent.
-export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get upgrade
-apt-get install puppet-agent
+useradd -m -U hab
+
+cp /vagrant/hab-sup.service /etc/systemd/system && systemctl daemon-reload
+systemctl enable hab-sup
+systemctl start hab-sup
