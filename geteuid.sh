@@ -6,7 +6,11 @@
 
 loglevel=$DEBUG
 
+os=$(uname -s)
+[[ $os == $supported_os ]] || error "$host runs $os, this script only supports $supported_os"
+
 debug "euid = $(id -u)"
 info "host = $(hostname), id = $(id)"
 warn "euid = $(id -u)"
-err "euid = $(id -u)"
+error "euid = $(id -u)"
+critical "euid = $(id -u)"

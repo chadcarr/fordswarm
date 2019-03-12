@@ -9,7 +9,7 @@
 [[ -f /bin/hab ]] \
     || curl https://raw.githubusercontent.com/habitat-sh/habitat/master/components/hab/install.sh | bash
 
-useradd -m -U hab
+useradd -m -U hab # Add home directory and user group
 
 cp /vagrant/hab-sup.service /etc/systemd/system && systemctl daemon-reload
 systemctl enable hab-sup
