@@ -19,20 +19,12 @@ Vagrant.configure("2") do |config|
     config.vm.box = "bento/opensuse-leap-42"
 
     config.vm.define "control-node", primary: true do |host|
-        # host.vm.provider "virtualbox" do |v|
-        #     v.memory = 3072 # increase memory for puppetserver
-        # end
+        host.vm.provider "virtualbox" do |v|
+            v.memory = 3072 # increase memory from 1024
+        end
         host.vm.hostname = "control-node"
         host.vm.network "private_network", ip: "#{manager}"
         host.vm.provision "shell", path: "bootstrap.sh"
-        # host.vm.provision "chef_solo" do |chef|
-        #     chef.json = {
-        #         bootstrap_chef: {
-        #             chefserver: "#{manager}"
-        #         }
-        #     }
-        #     chef.run_list = [ "bootstrap-chef" ]
-        # end
     end
 
     (1..workercount).each() do |i|
@@ -40,14 +32,6 @@ Vagrant.configure("2") do |config|
             host.vm.hostname = "work-node-#{i}"
             host.vm.network "private_network", ip: "#{net}.#{starthost+i}"
             host.vm.provision "shell", path: "bootstrap.sh"
-            # host.vm.provision "chef_solo" do |chef|
-            #     chef.json = {
-            #         bootstrap_chef: {
-            #             chefserver: "#{manager}"
-            #         }
-            #     }
-            #     chef.add_recipe "bootstrap-chef"
-            # end
         end
     end
 end
