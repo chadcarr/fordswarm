@@ -1,0 +1,12 @@
+[Unit]
+Description=Habitat Supervisor
+
+[Service]
+<%= if @chefserver %>
+ExecStart=/bin/hab sup run <%= "--peer @chefserver" %>
+<%= else %>
+ExecStart=/bin/hab sup run
+<%= end %>
+
+[Install]
+WantedBy=default.target
