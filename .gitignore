@@ -1,3 +1,4 @@
 .vagrant
 *.log
 swarm-token
+nodes

@@ -25,6 +25,7 @@ Vagrant.configure("2") do |config|
         host.vm.network "private_network", ip: "#{manager}"
         host.vm.provision "shell", path: "bootstrap.sh"
         host.vm.provision "chef_zero" do |chef|
+            chef.nodes_path ="nodes"
             chef.add_recipe "bootstrap"
         end
     end
@@ -36,10 +37,11 @@ Vagrant.configure("2") do |config|
             host.vm.provision "shell", path: "bootstrap.sh"
             host.vm.provision "chef_zero" do |chef|
                 chef.json = {
-                    bootstrap: {
-                        chefserver: "#{manager}"
-                    }
+                    "peers": [
+                        "#{manager}"
+                    ]
                 }
+                chef.nodes_path = "nodes"
                 chef.add_recipe "bootstrap"
             end
         end
