@@ -50,10 +50,10 @@ end
 
 # TODO:
 # write bootstrap cookbook for basic chef zero provisioning by vagrant
-# hab-sup.service template will start supervisors in a ring configuration
-#   hab sup run --peer <manager> (--ring ???)
+# hab-sup.service template will start supervisors peered to manager
+#   hab sup run --topology leader --group dev --strategy rolling [--peer <manager>]
 # write chef-base cookbook for continuous configuration management
 # vagrant cookbook loads chef-base service from stable
-#   hab svc load chadcarr/chef-base --channel stable --auto-update
+#   hab svc load chadcarr/chef-base --channel stable --group dev
 # chef-base cookbook loads xmldump service from dev (with deps)
-#   hab svc load chadcarr/xmldump --channel dev --auto-update
+#   hab svc load chadcarr/xmldump --channel dev --group dev
